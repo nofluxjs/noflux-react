@@ -85,12 +85,12 @@ describe('decorate', function () {
         return <h1> hello </h1>
       }
     }
-    
+
     @connect(state)
     class App extends React.Component {
       render() {
         appRenderCount++;
-        return <Item data={state.cursor('name')} />
+        return <Item data={state.get('name')} />
       }
     }
 
