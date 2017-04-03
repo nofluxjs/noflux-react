@@ -1,51 +1,34 @@
 {
-  "name": "noflux",
-  "version": "2.2.3",
-  "description": "a simple top down data flow implementation",
-  "main": "index.js",
+  "name": "@noflux/react",
+  "version": "0.0.0",
+  "description": "A simple top down data flow implementation for React",
+  "main": "src/index.js",
   "scripts": {
-    "prepublish": "npm run build",
-    "test": "mocha --compilers js:babel/register",
-    "coverage": "mocha --compilers js:babel/register -R html-cov > coverage.html",
-    "coverage-lcov": "mocha --compilers js:babel/register -R mocha-lcov-reporter > lcov.info",
-    "coverage-json": "mocha --compilers js:babel/register -R json-cov > coverage.json",
-    "build": "babel lib --out-dir dist && rm -rf dist/__tests__"
-  },
-  "browserify": {
-    "transform": [
-      "envify"
-    ]
-  },
-  "keywords": [
-    "flux",
-    "noflux"
-  ],
-  "author": "liuxijin",
-  "license": "MIT",
-  "devDependencies": {
-    "babel": "^5.4.7",
-    "blanket": "^1.1.7",
-    "expect.js": "^0.3.1",
-    "jsdom": "^5.4.3",
-    "mocha": "^2.2.5",
-    "mocha-lcov-reporter": "0.0.2",
-    "react": ">0.10",
-    "react-addons-test-utils": "^0.14.3",
-    "sinon": "^1.14.1"
-  },
-  "dependencies": {
-    "dataton": "^1.6.4",
-    "envify": "^3.0.0"
-  },
-  "directories": {
-    "test": "test"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ssnau/noflux.git"
+    "url": "git+https://github.com/nofluxjs/react.git"
   },
+  "keywords": [
+    "noflux",
+    "react",
+    "redux",
+    "flux",
+    "state"
+  ],
+  "contributors": [{
+    "name": "ssnau",
+    "email": "korige@gmail.com",
+    "url": "http://liuxijin.com/"
+  }, {
+    "name": "Malash",
+    "email": "i@malash.me",
+    "url": "https://malash.me/"
+  }],
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ssnau/noflux/issues"
+    "url": "https://github.com/nofluxjs/react/issues"
   },
-  "homepage": "https://github.com/ssnau/noflux#readme"
+  "homepage": "https://github.com/nofluxjs/react#readme"
 }
