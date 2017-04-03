@@ -2,9 +2,21 @@
   "name": "@noflux/react",
   "version": "0.0.0",
   "description": "A simple top down data flow implementation for React",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint src/ test/",
+    "lint:watch": "esw src/ test/ -w",
+    "ava": "ava test/ --verbose",
+    "ava:watch": "ava test/ --watch --verbose",
+    "dev": "concurrently -p \"[{name}]\" -n \"lint,ava\" \"npm run lint:watch\" \"npm run ava:watch\"",
+    "test": "npm run lint && npm run ava",
+    "build": "babel src --out-dir dist"
+  },
+  "ava": {
+    "babel": "inherit",
+    "require": [
+      "babel-register"
+    ]
   },
   "repository": {
     "type": "git",
@@ -17,18 +29,35 @@
     "flux",
     "state"
   ],
-  "contributors": [{
-    "name": "ssnau",
-    "email": "korige@gmail.com",
-    "url": "http://liuxijin.com/"
-  }, {
-    "name": "Malash",
-    "email": "i@malash.me",
-    "url": "https://malash.me/"
-  }],
+  "contributors": [
+    {
+      "name": "ssnau",
+      "email": "korige@gmail.com",
+      "url": "http://liuxijin.com/"
+    },
+    {
+      "name": "Malash",
+      "email": "i@malash.me",
+      "url": "https://malash.me/"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/nofluxjs/react/issues"
   },
-  "homepage": "https://github.com/nofluxjs/react#readme"
+  "homepage": "https://github.com/nofluxjs/react#readme",
+  "devDependencies": {
+    "ava": "^0.18.2",
+    "babel-cli": "^6.24.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-react": "^6.23.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "babel-register": "^6.24.0",
+    "concurrently": "^3.4.0",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.1.2",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-watch": "^3.0.1"
+  }
 }
