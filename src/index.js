@@ -1,7 +1,7 @@
 import { State } from '@noflux/state';
-import state from './state';
+import state, { applyMiddleware } from './state';
 import pure from './pure';
-import connect, { applyMiddleware } from './connect';
+import connect from './connect';
 
 export {
   State,
