@@ -13,6 +13,12 @@ import {
   getComponentName,
 } from './utils';
 
+let middlewares = [];
+
+export const applyMiddleware = (...newMiddlewares) => {
+  middlewares = [...([...newMiddlewares].reverse()), ...middlewares];
+};
+
 const connectWrapper = (Component, pathArray = ['']) => {
   for (let i = 0; i < pathArray.length; i++) {
     const path = pathArray[i];
@@ -31,10 +37,12 @@ const connectWrapper = (Component, pathArray = ['']) => {
     ::share();
 
   override(Component, 'componentDidMount', originComponentDidMount => function componentDidMount() {
-    this.__noflux = {};
+    this.__noflux = {
+      lastStateValue: state.get(),
+    };
     this.__noflux.subscription = change$
       .subscribe({
-        next: () => {
+        next: value => {
           if (__DEV__) {
             this.__noflux.timers = {
               startUpdate: timer.now(),
@@ -46,6 +54,16 @@ const connectWrapper = (Component, pathArray = ['']) => {
               const cost = this.__noflux.timers.endUpdate - this.__noflux.timers.startUpdate;
               // eslint-disable-next-line no-console
               console.log(`[noflux] ${getComponentName(Component)} rendering time ${cost.toFixed(3)} ms`);
+              middlewares.forEach(middleware =>
+                middleware({
+                  dispatch: () => {},
+                  getState: () => this.__noflux.lastStateValue,
+                })(() => {
+                  this.__noflux.lastStateValue = state.get();
+                })(
+                  { type: 'change', value },
+                ),
+              );
             }
           });
         },
