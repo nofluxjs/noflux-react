@@ -9,13 +9,15 @@ import {
   isString,
   isReactComponent,
   isReactPureComponent,
+  isReactStatelessComponent,
+  isReactComponentInstance,
   override,
   getComponentName,
 } from './utils';
 
-const connectWrapper = (Component, pathArray = ['']) => {
-  for (let i = 0; i < pathArray.length; i++) {
-    const path = pathArray[i];
+const connectWrapper = (Component, cursorPaths = ['']) => {
+  for (let i = 0; i < cursorPaths.length; i++) {
+    const path = cursorPaths[i];
     if (!isString(path) && !Array.isArray(path)) {
       throw new TypeError('@connect(path1, path2, ...) every path must be String or Array');
     }
@@ -26,7 +28,7 @@ const connectWrapper = (Component, pathArray = ['']) => {
   Component.__noflux = {};
 
   const change$ = Observable
-    ::from(pathArray)
+    ::from(cursorPaths)
     ::mergeMap(path => state.cursor(path).listen('change'))
     ::share();
 
@@ -65,17 +67,43 @@ const connectWrapper = (Component, pathArray = ['']) => {
   return Component;
 };
 
+const verifyReactImpureComponent = (target, prop, descriptor) => {
+  if (isReactComponentInstance(target) && prop && descriptor) {
+    throw new SyntaxError('@connect should not be used for component method');
+  }
+  if (isReactStatelessComponent(target)) {
+    throw new TypeError('@connect should not be used for stateless component');
+  }
+  if (isReactPureComponent(target)) {
+    throw new TypeError('@connect should not be used for pure component');
+  }
+  if (isReactComponent(target)) {
+    return true;
+  }
+  return false;
+};
+
+const connectWithCursor = cursorPaths => (...args) => {
+  const [target, prop, descriptor] = args;
+  if (!target) {
+    throw new TypeError('connect(path1, path2, ...)() is invalid, the param component must be given');
+  }
+  if (verifyReactImpureComponent(target, prop, descriptor)) {
+    connectWrapper(target, cursorPaths);
+  } else {
+    throw new TypeError('@connect must be used for component');
+  }
+};
+
 const connect = (...args) => {
-  if (!args.length) {
+  const [target, prop, descriptor] = args;
+  if (!target) {
     throw new TypeError('@connect() is invalid, do you mean @connect or @connect(\'\') or @connect([]) ?');
   }
-  const [Component] = args;
-  if (isReactPureComponent(Component)) {
-    throw new TypeError('@connect should not be used for PureComponent');
-  } else if (isReactComponent(Component)) {
-    return connectWrapper(Component);
+  if (verifyReactImpureComponent(target, prop, descriptor)) {
+    return connectWrapper(target);
   } else {
-    return realComponent => connectWrapper(realComponent, args);
+    return connectWithCursor(args);
   }
 };
 

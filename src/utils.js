@@ -11,10 +11,16 @@ export const timer = (
 export const isString = str => typeof str === 'string';
 
 export const isReactComponent = Component =>
-  Component.prototype && Component.prototype.isReactComponent;
+  Component && Component.prototype && Component.prototype.isReactComponent;
 
 export const isReactPureComponent = Component =>
-  Component.prototype && Component.prototype.isPureReactComponent;
+  Component && Component.prototype && Component.prototype.isPureReactComponent;
+
+export const isReactStatelessComponent = Component =>
+  typeof Component === 'function' && !isReactComponent(Component);
+
+export const isReactComponentInstance = instance =>
+  instance && Object.getPrototypeOf(instance) && Object.getPrototypeOf(instance).isReactComponent;
 
 export const getComponentName = Component => {
   const constructor = Component.prototype && Component.prototype.constructor;
@@ -26,8 +32,6 @@ export const getComponentName = Component => {
     || 'NONAME'
   );
 };
-
-export function noop() {}
 
 export const override = (Class, methodName, callback) => {
   Class.prototype[methodName] = callback(Class.prototype[methodName]);
