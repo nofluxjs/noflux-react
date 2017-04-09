@@ -7,7 +7,7 @@ import {
   isReactComponentInstance,
 } from '../../src/utils';
 
-test('is react component instance', t => {
+test('check component instance', t => {
   class App extends Component {
     render() {
       return (

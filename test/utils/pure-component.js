@@ -2,7 +2,7 @@ import test from 'ava';
 import React, { PureComponent } from 'react';
 import { isReactComponent, isReactPureComponent, getComponentName } from '../../src/utils';
 
-test('is react pure component', t => {
+test('check pure component', t => {
   class App extends PureComponent {
     render() {
       return (

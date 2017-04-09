@@ -19,11 +19,11 @@ const connectWrapper = (Component, cursorPaths = ['']) => {
   for (let i = 0; i < cursorPaths.length; i++) {
     const path = cursorPaths[i];
     if (!isString(path) && !Array.isArray(path)) {
-      throw new TypeError('@connect(path1, path2, ...) every path must be String or Array');
+      throw new TypeError('@connect(path1, path2, ...) every path must be String or Array.');
     }
   }
   if (Component.__noflux) {
-    throw new SyntaxError(`You should not use @connect for component ${getComponentName(Component)} more than once, use @connect(path1, path2, ...) instead`);
+    throw new SyntaxError(`You should not use @connect for component ${getComponentName(Component)} more than once, use @connect(path1, path2, ...) instead.`);
   }
   Component.__noflux = {};
 
@@ -69,13 +69,13 @@ const connectWrapper = (Component, cursorPaths = ['']) => {
 
 const verifyReactImpureComponent = (target, prop, descriptor) => {
   if (isReactComponentInstance(target) && prop && descriptor) {
-    throw new SyntaxError('@connect should not be used for component method');
+    throw new SyntaxError('@connect should not be used for component method.');
   }
   if (isReactStatelessComponent(target)) {
-    throw new TypeError('@connect should not be used for stateless component');
+    throw new TypeError('@connect should not be used for stateless component.');
   }
   if (isReactPureComponent(target)) {
-    throw new TypeError('@connect should not be used for pure component');
+    throw new TypeError('@connect should not be used for pure component.');
   }
   if (isReactComponent(target)) {
     return true;
@@ -86,12 +86,12 @@ const verifyReactImpureComponent = (target, prop, descriptor) => {
 const connectWithCursor = cursorPaths => (...args) => {
   const [target, prop, descriptor] = args;
   if (!target) {
-    throw new TypeError('connect(path1, path2, ...)() is invalid, the param component must be given');
+    throw new TypeError('connect(path1, path2, ...)() is invalid, the param component must be given.');
   }
   if (verifyReactImpureComponent(target, prop, descriptor)) {
     connectWrapper(target, cursorPaths);
   } else {
-    throw new TypeError('@connect must be used for component');
+    throw new TypeError('@connect must be used for component.');
   }
 };
 
@@ -105,6 +105,17 @@ const connect = (...args) => {
   } else {
     return connectWithCursor(args);
   }
+};
+
+let noticed = false;
+
+export const Connect = (...args) => {
+  if (!noticed) {
+    noticed = true;
+    // eslint-disable-next-line no-console
+    console.warn('@Connect is deprecated, use @connect instead.');
+  }
+  return connect(...args);
 };
 
 export default connect;
