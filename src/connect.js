@@ -16,12 +16,11 @@ import {
 } from './utils';
 
 const connectWrapper = (Component, cursorPaths = ['']) => {
-  for (let i = 0; i < cursorPaths.length; i++) {
-    const path = cursorPaths[i];
+  cursorPaths.forEach(path => {
     if (!isString(path) && !Array.isArray(path)) {
       throw new TypeError('@connect(path1, path2, ...) every path must be String or Array.');
     }
-  }
+  });
   if (Component.__noflux) {
     throw new SyntaxError(`You should not use @connect for component ${getComponentName(Component)} more than once, use @connect(path1, path2, ...) instead.`);
   }
