@@ -1,5 +1,6 @@
 import test from 'ava';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from '../../src';
 
 test('can not use @connect for stateless component', t => {
@@ -12,7 +13,7 @@ test('can not use @connect for stateless component', t => {
       );
     }
     App.propTypes = {
-      text: React.PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
     };
     connect(App);
   });

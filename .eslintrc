@@ -21,6 +21,7 @@
     "no-plusplus": ["off"],
     "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx"] }],
     "react/prefer-stateless-function": ["off"],
-    "class-methods-use-this": ["off"]
+    "class-methods-use-this": ["off"],
+    "react/no-multi-comp": ["off"]
   }
 }

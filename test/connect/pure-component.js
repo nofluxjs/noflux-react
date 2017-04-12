@@ -1,5 +1,6 @@
 import test from 'ava';
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from '../../src';
 
 test('can not use @connect for pure component', t => {
@@ -15,7 +16,7 @@ test('can not use @connect for pure component', t => {
       }
     }
     App.propTypes = {
-      text: React.PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
     };
   });
 });

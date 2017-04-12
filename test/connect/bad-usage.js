@@ -1,5 +1,6 @@
 import test from 'ava';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { mount } from 'enzyme';
 import { connect } from '../../src';
 
@@ -16,7 +17,7 @@ test('can not use @connect for pure component', t => {
       }
     }
     App.propTypes = {
-      text: React.PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
     };
     mount(<App text="hello, world" />);
   });
