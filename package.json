@@ -1,6 +1,6 @@
 {
   "name": "@noflux/react",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A simple top down data flow implementation for React",
   "main": "dist/index.js",
   "scripts": {
