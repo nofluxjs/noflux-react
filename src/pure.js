@@ -19,7 +19,7 @@ const checkPureDeprecated = () => {
 
 let noticed = false;
 
-export default component => {
+const pure = component => {
   if (!noticed) {
     noticed = true;
     const pureDeprecated = checkPureDeprecated();
@@ -30,3 +30,5 @@ export default component => {
   }
   return pureRender(component);
 };
+
+export default pure;

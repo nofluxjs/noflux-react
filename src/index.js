@@ -1,8 +1,11 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { State } from '@noflux/state';
+import state, { State } from './state';
 import pure from './pure';
+import connect, { Connect } from './connect';
 
 export {
-  pure,
   State,
+  state,
+  pure,
+  connect,
+  Connect,
 };
