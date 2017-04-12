@@ -4,6 +4,7 @@
   "description": "A simple top down data flow implementation for React",
   "main": "dist/index.js",
   "scripts": {
+    "prepublish": "npm run build",
     "lint": "eslint src/ test/",
     "lint:watch": "esw src/ test/ -w",
     "ava": "ava test/ --verbose",
