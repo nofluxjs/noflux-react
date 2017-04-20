@@ -1,20 +1,13 @@
-import semver from 'semver';
 import pureRender from 'pure-render-decorator';
 
-const checkReactVersion = () => {
-  let reactVersion;
+const checkPureDeprecated = () => {
   try {
     // eslint-disable-next-line global-require, import/no-unresolved
-    reactVersion = require('react/package.json').version;
+    const React = require('react');
+    return Boolean(React.PureComponent);
   } catch (e) {
     throw new ReferenceError('React not installed');
   }
-  return reactVersion;
-};
-
-const checkPureDeprecated = () => {
-  const reactVersion = checkReactVersion();
-  return semver.gte(reactVersion, '15.3.0');
 };
 
 let noticed = false;
