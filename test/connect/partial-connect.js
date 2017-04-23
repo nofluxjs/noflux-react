@@ -6,16 +6,16 @@ import { connect, state } from '../../src';
 test('partial connect', t => {
   state.set({
     profile: {
-      name: 'Ssnau',
+      name: 'ssnau',
     },
-    repo: {
+    project: {
       name: 'noflux',
     },
   });
 
   let profileRenderCallTimes = 0;
   @connect('profile')
-  class ProfleContainer extends Component {
+  class ProfileContainer extends Component {
     render() {
       profileRenderCallTimes++;
       return (
@@ -26,14 +26,28 @@ test('partial connect', t => {
     }
   }
 
-  let repoRenderCallTimes = 0;
-  @connect('repo.name')
-  class RepoContainer extends Component {
+  let projectRenderCallTimes = 0;
+  @connect('project.name')
+  class ProjectContainer extends Component {
     render() {
-      repoRenderCallTimes++;
+      projectRenderCallTimes++;
       return (
         <div>
-          Repo name is {state.get('repo.name')}
+          Project name is {state.get('project.name')}
+        </div>
+      );
+    }
+  }
+
+  let combineRenderCallTimes = 0;
+  @connect(['profile', 'project.name'])
+  class CombineContainer extends Component {
+    render() {
+      combineRenderCallTimes++;
+      return (
+        <div>
+          Profile name is {state.get('profile.name')}
+          Project name is {state.get('project.name')}
         </div>
       );
     }
@@ -43,8 +57,9 @@ test('partial connect', t => {
     render() {
       return (
         <div>
-          <ProfleContainer />
-          <RepoContainer />
+          <ProfileContainer />
+          <ProjectContainer />
+          <CombineContainer />
         </div>
       );
     }
@@ -52,17 +67,21 @@ test('partial connect', t => {
 
   mount(<App />);
   t.is(profileRenderCallTimes, 1);
-  t.is(repoRenderCallTimes, 1);
+  t.is(projectRenderCallTimes, 1);
+  t.is(combineRenderCallTimes, 1);
 
-  state.set('profile.name', 'Malash');
+  state.set('profile.name', 'malash');
   t.is(profileRenderCallTimes, 2);
-  t.is(repoRenderCallTimes, 1);
+  t.is(projectRenderCallTimes, 1);
+  t.is(combineRenderCallTimes, 2);
 
-  state.set('repo.name', '@noflux/react');
+  state.set('project.name', '@noflux/react');
   t.is(profileRenderCallTimes, 2);
-  t.is(repoRenderCallTimes, 2);
+  t.is(projectRenderCallTimes, 2);
+  t.is(combineRenderCallTimes, 3);
 
-  state.set('repo.git', 'https://github.com/nofluxjs/react.git');
+  state.set('project.repo', 'https://github.com/nofluxjs/react.git');
   t.is(profileRenderCallTimes, 2);
-  t.is(repoRenderCallTimes, 2);
+  t.is(projectRenderCallTimes, 2);
+  t.is(combineRenderCallTimes, 3);
 });
