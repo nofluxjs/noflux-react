@@ -1,3 +1,6 @@
+# Project
+test
+
 # Logs
 logs
 *.log
@@ -38,6 +41,3 @@ jspm_packages
 
 # WebStorm
 .idea
-
-# Build files
-dist
