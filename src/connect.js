@@ -1,7 +1,3 @@
-import { Observable } from 'rxjs/Observable';
-import { from } from 'rxjs/observable/from';
-import { mergeMap } from 'rxjs/operator/mergeMap';
-import { share } from 'rxjs/operator/share';
 import state from './state';
 import {
   __DEV__,
@@ -16,48 +12,44 @@ import {
 } from './utils';
 
 const connectWrapper = (Component, cursorPaths = ['']) => {
-  cursorPaths.forEach(path => {
-    if (!isString(path) && !Array.isArray(path)) {
-      throw new TypeError('@connect(path1, path2, ...) every path must be String or Array.');
-    }
-  });
   if (Component.__noflux) {
     throw new SyntaxError(`You should not use @connect for component ${getComponentName(Component)} more than once, use @connect(path1, path2, ...) instead.`);
   }
   Component.__noflux = {};
 
-  const change$ = Observable
-    ::from(cursorPaths)
-    ::mergeMap(path => state.cursor(path).listen('change'))
-    ::share();
+  const cursors = cursorPaths.map(cursorPath => {
+    if (!isString(cursorPath) && !Array.isArray(cursorPath)) {
+      throw new TypeError('@connect(path1, path2, ...) every path must be String or Array.');
+    }
+    return state.cursor(cursorPath);
+  });
 
   override(Component, 'componentDidMount', originComponentDidMount => function componentDidMount() {
     this.__noflux = {};
-    this.__noflux.subscription = change$
-      .subscribe({
-        next: () => {
-          if (__DEV__) {
-            this.__noflux.timers = {
-              startUpdate: timer.now(),
-            };
-          }
-          this.forceUpdate(() => {
-            if (__DEV__) {
-              this.__noflux.timers.endUpdate = timer.now();
-              const cost = this.__noflux.timers.endUpdate - this.__noflux.timers.startUpdate;
-              // eslint-disable-next-line no-console
-              console.log(`[noflux] ${getComponentName(Component)} rendering time ${cost.toFixed(3)} ms`);
-            }
-          });
-        },
+    const cursorChange = () => {
+      if (__DEV__) {
+        this.__noflux.timers = {
+          startUpdate: timer.now(),
+        };
+      }
+      this.forceUpdate(() => {
+        if (__DEV__) {
+          this.__noflux.timers.endUpdate = timer.now();
+          const cost = this.__noflux.timers.endUpdate - this.__noflux.timers.startUpdate;
+          // eslint-disable-next-line no-console
+          console.log(`[noflux] ${getComponentName(Component)} rendering time ${cost.toFixed(3)} ms`);
+        }
       });
+    };
+
+    this.__noflux.cursorChangeHandlers = cursors.map(cursor => cursor.on('change', cursorChange));
     if (originComponentDidMount) {
       originComponentDidMount.call(this);
     }
   });
 
   override(Component, 'componentWillUnmount', originComponentWillUnmount => function componentWillUnmount() {
-    this.__noflux.subscription.unsubscribe();
+    this.__noflux.cursorChangeHandlers.forEach(handler => handler());
     if (originComponentWillUnmount) {
       originComponentWillUnmount.call(this);
     }
@@ -82,8 +74,7 @@ const verifyReactImpureComponent = (target, prop, descriptor) => {
   return false;
 };
 
-const connectWithCursor = cursorPaths => (...args) => {
-  const [target, prop, descriptor] = args;
+const connectWithCursor = cursorPaths => (target, prop, descriptor) => {
   if (!target) {
     throw new TypeError('connect(path1, path2, ...)() is invalid, the param component must be given.');
   }
@@ -94,15 +85,15 @@ const connectWithCursor = cursorPaths => (...args) => {
   }
 };
 
-const connect = (...args) => {
-  const [target, prop, descriptor] = args;
+const connect = (target, prop, descriptor) => {
   if (!target) {
     throw new TypeError('@connect() is invalid, do you mean @connect or @connect(\'\') or @connect([]) ?');
   }
   if (verifyReactImpureComponent(target, prop, descriptor)) {
     return connectWrapper(target);
   } else {
-    return connectWithCursor(args);
+    const cursorPaths = Array.isArray(target) ? target : [target];
+    return connectWithCursor(cursorPaths);
   }
 };
 

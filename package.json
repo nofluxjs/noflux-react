@@ -1,7 +1,7 @@
 {
   "name": "@noflux/react",
   "version": "0.1.0",
-  "description": "A simple top down data flow implementation for React",
+  "description": "Official React bindings for noflux",
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "npm run build",
@@ -49,9 +49,8 @@
   },
   "homepage": "https://github.com/nofluxjs/react#readme",
   "dependencies": {
-    "@noflux/state": "^0.1.1",
-    "pure-render-decorator": "^1.2.1",
-    "rxjs": "^5.3.0"
+    "@noflux/state": "^0.3.0",
+    "pure-render-decorator": "^1.2.1"
   },
   "devDependencies": {
     "ava": "^0.18.2",
