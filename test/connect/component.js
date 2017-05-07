@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import { connect, state } from '../../src';
 
 test('make the component fluxify', t => {
-  state.set({ name: 'Ssnau' });
+  state.load({ name: 'Ssnau' });
 
   let renderCallTimes = 0;
   @connect
