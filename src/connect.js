@@ -115,12 +115,11 @@ const connect = (target, prop, descriptor) => {
 };
 
 let noticed = false;
-
 export const Connect = (...args) => {
   if (!noticed) {
     noticed = true;
     // eslint-disable-next-line no-console
-    console.warn('@Connect is deprecated, use @connect instead.');
+    console.warn('Warning: @Connect is deprecated, use @connect instead.');
   }
   return connect(...args);
 };

@@ -11,14 +11,13 @@ const checkPureDeprecated = () => {
 };
 
 let noticed = false;
-
 const pure = component => {
   if (!noticed) {
     noticed = true;
     const pureDeprecated = checkPureDeprecated();
     if (pureDeprecated) {
       // eslint-disable-next-line no-console
-      console.warn('@pure is deprecated, use React.PureComponent instead. https://facebook.github.io/react/docs/pure-render-mixin.html');
+      console.warn('Warning: @pure is deprecated, use React.PureComponent instead. https://facebook.github.io/react/docs/pure-render-mixin.html');
     }
   }
   return pureRender(component);
