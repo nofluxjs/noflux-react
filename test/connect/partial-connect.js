@@ -14,7 +14,7 @@ test('partial connect', t => {
   });
 
   let profileRenderCallTimes = 0;
-  @connect('profile')
+  @connect
   class ProfileContainer extends Component {
     render() {
       profileRenderCallTimes++;
@@ -27,7 +27,7 @@ test('partial connect', t => {
   }
 
   let projectRenderCallTimes = 0;
-  @connect('project.name')
+  @connect
   class ProjectContainer extends Component {
     render() {
       projectRenderCallTimes++;
@@ -40,7 +40,7 @@ test('partial connect', t => {
   }
 
   let combineRenderCallTimes = 0;
-  @connect(['profile', 'project.name'])
+  @connect
   class CombineContainer extends Component {
     render() {
       combineRenderCallTimes++;
@@ -81,6 +81,11 @@ test('partial connect', t => {
   t.is(combineRenderCallTimes, 3);
 
   state.set('project.repo', 'https://github.com/nofluxjs/react.git');
+  t.is(profileRenderCallTimes, 2);
+  t.is(projectRenderCallTimes, 2);
+  t.is(combineRenderCallTimes, 3);
+
+  state.set('other', 'data');
   t.is(profileRenderCallTimes, 2);
   t.is(projectRenderCallTimes, 2);
   t.is(combineRenderCallTimes, 3);
