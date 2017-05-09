@@ -1,6 +1,7 @@
 import state from './state';
 import {
   __DEV__,
+  SYMBOL_NOFLUX,
   timer,
   isReactComponent,
   isReactPureComponent,
@@ -11,10 +12,10 @@ import {
 } from './utils';
 
 const connectComponent = Component => {
-  if (Component.__noflux) {
+  if (Component[SYMBOL_NOFLUX]) {
     throw new SyntaxError(`You should not use @connect for component ${getComponentName(Component)} more than once.`);
   }
-  Component.__noflux = {};
+  Component[SYMBOL_NOFLUX] = {};
 
   override(Component, 'componentWillMount', originComponentWillMount => function componentWillMount() {
     // call origin componentWillMount
@@ -23,14 +24,15 @@ const connectComponent = Component => {
     }
 
     // init
-    this.__noflux = {
+    this[SYMBOL_NOFLUX] = {
       getPaths: {},
       onChangeHandlers: [],
     };
+    const __noflux = this[SYMBOL_NOFLUX];
     const cursorChange = () => {
       // skip change emitted after unmounting component
       // TODO: test this guard
-      if (!this.__noflux.mounted) return;
+      if (!__noflux.mounted) return;
 
       const startTime = timer.now();
       this.forceUpdate(() => {
@@ -42,11 +44,11 @@ const connectComponent = Component => {
         }
       });
     };
-    this.__noflux.onGetHandler = state.on('get', ({ path }) => {
-      if (this.__noflux.isRendering && !this.__noflux.getPaths[path]) {
-        this.__noflux.getPaths[path] = true;
+    __noflux.onGetHandler = state.on('get', ({ path }) => {
+      if (__noflux.isRendering && !__noflux.getPaths[path]) {
+        __noflux.getPaths[path] = true;
         // register cursor change handler
-        this.__noflux.onChangeHandlers.push(state.cursor(path).on('change', cursorChange));
+        __noflux.onChangeHandlers.push(state.cursor(path).on('change', cursorChange));
       }
     });
   });
@@ -56,9 +58,10 @@ const connectComponent = Component => {
       throw new Error(`No render method found on the returned component instance of ${getComponentName(Component)}, you may have forgotten to define render.`);
     }
 
-    this.__noflux.isRendering = true;
+    const __noflux = this[SYMBOL_NOFLUX];
+    __noflux.isRendering = true;
     const vdom = originRender.call(this);
-    this.__noflux.isRendering = false;
+    __noflux.isRendering = false;
     return vdom;
   });
 
@@ -73,14 +76,15 @@ const connectComponent = Component => {
   });
 
   override(Component, 'componentWillUnmount', originComponentWillUnmount => function componentWillUnmount() {
+    const __noflux = this[SYMBOL_NOFLUX];
     // unregister cursor change handlers
-    this.__noflux.onChangeHandlers.forEach(handler => handler());
+    __noflux.onChangeHandlers.forEach(handler => handler());
 
     // inregister on get handler
-    this.__noflux.onGetHandler();
+    __noflux.onGetHandler();
 
     // reset component mounted flag
-    this.__noflux.mounted = false;
+    __noflux.mounted = false;
 
     // call origin componentWillUnmount
     if (originComponentWillUnmount) {
