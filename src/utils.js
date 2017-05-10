@@ -1,7 +1,5 @@
 export const __DEV__ = process.env.NODE_ENV !== 'production';
 
-export const SYMBOL_NOFLUX = '__noflux';
-
 /* global performance */
 export const timer = (
   typeof performance !== 'undefined'

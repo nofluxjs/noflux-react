@@ -1,7 +1,6 @@
 import state from './state';
 import {
   __DEV__,
-  SYMBOL_NOFLUX,
   timer,
   isReactComponent,
   isReactPureComponent,
@@ -10,6 +9,8 @@ import {
   override,
   getComponentName,
 } from './utils';
+
+const SYMBOL_NOFLUX = '__noflux';
 
 const connectComponent = Component => {
   if (Component[SYMBOL_NOFLUX]) {
@@ -26,7 +27,7 @@ const connectComponent = Component => {
     // init
     this[SYMBOL_NOFLUX] = {
       getPaths: {},
-      onChangeHandlers: [],
+      onChangeDisposers: [],
     };
     const __noflux = this[SYMBOL_NOFLUX];
     const cursorChange = () => {
@@ -44,11 +45,11 @@ const connectComponent = Component => {
         }
       });
     };
-    __noflux.onGetHandler = state.on('get', ({ path }) => {
+    __noflux.onGetDisposer = state.on('get', ({ path }) => {
       if (__noflux.isRendering && !__noflux.getPaths[path]) {
         __noflux.getPaths[path] = true;
         // register cursor change handler
-        __noflux.onChangeHandlers.push(state.cursor(path).on('change', cursorChange));
+        __noflux.onChangeDisposers.push(state.cursor(path).on('change', cursorChange));
       }
     });
   });
@@ -77,11 +78,11 @@ const connectComponent = Component => {
 
   override(Component, 'componentWillUnmount', originComponentWillUnmount => function componentWillUnmount() {
     const __noflux = this[SYMBOL_NOFLUX];
-    // unregister cursor change handlers
-    __noflux.onChangeHandlers.forEach(handler => handler());
+    // dispose cursor change listeners
+    __noflux.onChangeDisposers.forEach(disposer => disposer());
 
-    // inregister on get handler
-    __noflux.onGetHandler();
+    // dispose get listener
+    __noflux.onGetDisposer();
 
     // reset component mounted flag
     __noflux.mounted = false;
