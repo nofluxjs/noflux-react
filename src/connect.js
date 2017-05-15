@@ -2,7 +2,6 @@ import state from './state';
 import {
   __DEV__,
   timer,
-  isString,
   isReactComponent,
   isReactPureComponent,
   isReactStatelessComponent,
@@ -11,45 +10,63 @@ import {
   getComponentName,
 } from './utils';
 
-const connectWrapper = (Component, cursorPaths = ['']) => {
-  if (Component.__noflux) {
+const SYMBOL_NOFLUX = '__noflux';
+
+const connectComponent = Component => {
+  if (Component[SYMBOL_NOFLUX]) {
     throw new SyntaxError(`You should not use @connect for component ${getComponentName(Component)} more than once.`);
   }
-  Component.__noflux = {};
+  Component[SYMBOL_NOFLUX] = {};
 
-  const cursors = cursorPaths.map(cursorPath => {
-    if (!isString(cursorPath)) {
-      throw new TypeError('@connect([path1, path2, ...]) every path must be String.');
+  override(Component, 'componentWillMount', originComponentWillMount => function componentWillMount() {
+    // call origin componentWillMount
+    if (originComponentWillMount) {
+      originComponentWillMount.call(this);
     }
-    return state.cursor(cursorPath);
-  });
 
-  override(Component, 'componentDidMount', originComponentDidMount => function componentDidMount() {
-    this.__noflux = {};
-
+    // init
+    this[SYMBOL_NOFLUX] = {
+      getPaths: {},
+      onChangeDisposers: [],
+    };
+    const __noflux = this[SYMBOL_NOFLUX];
     const cursorChange = () => {
       // skip change emitted after unmounting component
       // TODO: test this guard
-      if (!this.__noflux.mounted) return;
+      if (!__noflux.mounted) return;
 
-      if (__DEV__) {
-        this.__noflux.timers = {
-          startUpdate: timer.now(),
-        };
-      }
+      const startTime = timer.now();
       this.forceUpdate(() => {
+        const endTime = timer.now();
+        const cost = endTime - startTime;
         if (__DEV__) {
-          this.__noflux.timers.endUpdate = timer.now();
-          const cost = this.__noflux.timers.endUpdate - this.__noflux.timers.startUpdate;
           // eslint-disable-next-line no-console
           console.log(`[noflux] ${getComponentName(Component)} rendering time ${cost.toFixed(3)} ms`);
         }
       });
     };
+    __noflux.onGetDisposer = state.on('get', ({ path }) => {
+      if (__noflux.isRendering && !__noflux.getPaths[path]) {
+        __noflux.getPaths[path] = true;
+        // register cursor change handler
+        __noflux.onChangeDisposers.push(state.cursor(path).on('change', cursorChange));
+      }
+    });
+  });
 
-    // register cursor change handlers
-    this.__noflux.cursorChangeHandlers = cursors.map(cursor => cursor.on('change', cursorChange));
+  override(Component, 'render', originRender => function render() {
+    if (!originRender) {
+      throw new Error(`No render method found on the returned component instance of ${getComponentName(Component)}, you may have forgotten to define render.`);
+    }
 
+    const __noflux = this[SYMBOL_NOFLUX];
+    __noflux.isRendering = true;
+    const vdom = originRender.call(this);
+    __noflux.isRendering = false;
+    return vdom;
+  });
+
+  override(Component, 'componentDidMount', originComponentDidMount => function componentDidMount() {
     // call origin componentDidMount
     if (originComponentDidMount) {
       originComponentDidMount.call(this);
@@ -60,22 +77,29 @@ const connectWrapper = (Component, cursorPaths = ['']) => {
   });
 
   override(Component, 'componentWillUnmount', originComponentWillUnmount => function componentWillUnmount() {
-    // unregister cursor change handlers
-    this.__noflux.cursorChangeHandlers.forEach(handler => handler());
+    const __noflux = this[SYMBOL_NOFLUX];
+    // dispose cursor change listeners
+    __noflux.onChangeDisposers.forEach(disposer => disposer());
+
+    // dispose get listener
+    __noflux.onGetDisposer();
+
+    // reset component mounted flag
+    __noflux.mounted = false;
 
     // call origin componentWillUnmount
     if (originComponentWillUnmount) {
       originComponentWillUnmount.call(this);
     }
-
-    // reset component mounted flag
-    this.__noflux.mounted = false;
   });
 
   return Component;
 };
 
-const verifyReactImpureComponent = (target, prop, descriptor) => {
+const connect = (target, prop, descriptor) => {
+  if (!target) {
+    throw new TypeError('@connect() is invalid, do you mean @connect or @connect(\'\') or @connect([]) ?');
+  }
   if (isReactComponentInstance(target) && prop && descriptor) {
     throw new SyntaxError('@connect should not be used for component method.');
   }
@@ -85,33 +109,10 @@ const verifyReactImpureComponent = (target, prop, descriptor) => {
   if (isReactPureComponent(target)) {
     throw new TypeError('@connect should not be used for pure component.');
   }
-  if (isReactComponent(target)) {
-    return true;
+  if (!isReactComponent(target)) {
+    throw new TypeError('@connect should be used for React component');
   }
-  return false;
-};
-
-const connectWithCursor = cursorPaths => (target, prop, descriptor) => {
-  if (!target) {
-    throw new TypeError('connect(...)() is invalid, the param component must be given.');
-  }
-  if (verifyReactImpureComponent(target, prop, descriptor)) {
-    connectWrapper(target, cursorPaths);
-  } else {
-    throw new TypeError('@connect must be used for component.');
-  }
-};
-
-const connect = (target, prop, descriptor) => {
-  if (!target) {
-    throw new TypeError('@connect() is invalid, do you mean @connect or @connect(\'\') or @connect([]) ?');
-  }
-  if (verifyReactImpureComponent(target, prop, descriptor)) {
-    return connectWrapper(target);
-  } else {
-    const cursorPaths = Array.isArray(target) ? target : [target];
-    return connectWithCursor(cursorPaths);
-  }
+  return connectComponent(target);
 };
 
 let noticed = false;

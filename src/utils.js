@@ -8,8 +8,6 @@ export const timer = (
   ? performance : Date
 );
 
-export const isString = str => typeof str === 'string';
-
 export const isReactComponent = Component =>
   Component && Component.prototype && Component.prototype.isReactComponent;
 
