@@ -98,7 +98,7 @@ const connectComponent = Component => {
 
 const connect = (target, prop, descriptor) => {
   if (!target) {
-    throw new TypeError('@connect() is invalid, do you mean @connect or @connect(\'\') or @connect([]) ?');
+    throw new TypeError('@connect() is invalid, do you mean @connect ?');
   }
   if (isReactComponentInstance(target) && prop && descriptor) {
     throw new SyntaxError('@connect should not be used for component method.');
