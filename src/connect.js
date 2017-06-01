@@ -67,13 +67,13 @@ const connectComponent = Component => {
   });
 
   override(Component, 'componentDidMount', originComponentDidMount => function componentDidMount() {
+    // set component mounted flag
+    this.__noflux.mounted = true;
+
     // call origin componentDidMount
     if (originComponentDidMount) {
       originComponentDidMount.call(this);
     }
-
-    // set component mounted flag
-    this.__noflux.mounted = true;
   });
 
   override(Component, 'componentWillUnmount', originComponentWillUnmount => function componentWillUnmount() {
