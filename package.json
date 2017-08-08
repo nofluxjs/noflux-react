@@ -2,7 +2,9 @@
   "name": "@noflux/react",
   "version": "0.4.4",
   "description": "Official React bindings for noflux",
-  "main": "dist/index.js",
+  "main": "dist/noflux-react.cjs.js",
+  "module": "dist/noflux-react.es.js",
+  "unpkg": "dist/noflux-react.umd.js",
   "scripts": {
     "prepublish": "npm run build",
     "lint": "eslint src/ test/",
@@ -11,7 +13,12 @@
     "ava:watch": "ava test/ --watch --verbose",
     "dev": "concurrently -p \"[{name}]\" -n \"lint,ava\" \"npm run lint:watch\" \"npm run ava:watch\"",
     "test": "npm run lint && npm run ava",
-    "build": "babel src --out-dir dist"
+    "clean": "rimraf dist",
+    "build": "npm run clean && npm run build:cjs && npm run build:es && npm run build:umd && npm run build:umd-min",
+    "build:cjs": "cross-env TARGET=cjs rollup -c",
+    "build:es": "cross-env TARGET=es rollup -c",
+    "build:umd": "cross-env TARGET=umd rollup -c",
+    "build:umd-min": "cross-env TARGET=umd NODE_ENV=production rollup -c"
   },
   "ava": {
     "babel": "inherit",
@@ -61,12 +68,14 @@
     "ava": "^0.18.2",
     "babel-cli": "^6.24.0",
     "babel-eslint": "^7.2.1",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-0": "^6.22.0",
     "babel-register": "^6.24.0",
     "concurrently": "^3.4.0",
+    "cross-env": "^5.0.4",
     "enzyme": "^2.8.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
@@ -78,7 +87,14 @@
     "prop-types": "^15.5.7",
     "react": "^15.5.3",
     "react-addons-test-utils": "^15.5.0",
-    "react-dom": "^15.5.3"
+    "react-dom": "^15.5.3",
+    "rimraf": "^2.6.1",
+    "rollup": "^0.45.2",
+    "rollup-plugin-babel": "^3.0.1",
+    "rollup-plugin-commonjs": "^8.1.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-replace": "^1.1.1",
+    "rollup-plugin-uglify": "^2.0.1"
   },
   "peerDependencies": {
     "react": ">=15.3.0"
