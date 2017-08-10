@@ -1,4 +1,5 @@
-import state, { State } from './state';
+import { State } from '@noflux/state';
+import state from './state';
 import pure from './pure';
 import connect, { Connect } from './connect';
 
