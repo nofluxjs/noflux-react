@@ -1,6 +1,6 @@
 {
   "name": "@noflux/react",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "Official React bindings for noflux",
   "main": "dist/noflux-react.cjs.js",
   "module": "dist/noflux-react.es.js",
