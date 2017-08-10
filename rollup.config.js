@@ -33,7 +33,7 @@ const config = {
       ],
       plugins: ['external-helpers'],
     }),
-    replace({
+    isProd && replace({
       'process.env.NODE_ENV': JSON.stringify(env),
     }),
   ],
