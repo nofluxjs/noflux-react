@@ -33,8 +33,8 @@ const config = {
       ],
       plugins: ['external-helpers'],
     }),
-    isProd && replace({
-      'process.env.NODE_ENV': JSON.stringify(env),
+    target === 'umd' && replace({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
   ],
   dest: `dist/noflux-react.${target}.${isProd ? 'min.js' : 'js'}`,
