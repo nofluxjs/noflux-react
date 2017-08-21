@@ -3,7 +3,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 import replace from 'rollup-plugin-replace';
 import uglify from 'rollup-plugin-uglify';
-import { version } from './package.json';
+import { version, dependencies, devDependencies, peerDependencies } from './package.json';
 
 const target = process.env.TARGET || 'es';
 const env = process.env.NODE_ENV || 'development';
@@ -20,8 +20,8 @@ const config = {
   format: target,
   moduleName: 'NofluxReact',
   banner,
+  external: Object.keys(Object.assign({}, dependencies, devDependencies, peerDependencies)),
   plugins: [
-    resolve(),
     commonjs(),
     babel({
       babelrc: false,
@@ -33,20 +33,27 @@ const config = {
       ],
       plugins: ['external-helpers'],
     }),
-    target === 'umd' && replace({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    }),
   ],
   dest: `dist/noflux-react.${target}.${isProd ? 'min.js' : 'js'}`,
 };
 
+if (target === 'umd') {
+  config.external = [];
+  config.plugins = [].concat(
+    [resolve()],
+    config.plugins,
+    [replace({ 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) })]
+  );
+}
+
 if (isProd) {
-  config.plugins.push(
-    uglify({
+  config.plugins = [].concat(
+    config.plugins,
+    [uglify({
       output: {
         comments: (node, comment) => comment.type === "comment2" && /@preserve|@license|@cc_on/i.test(comment.value),
       },
-    })
+    })]
   );
 }
 
