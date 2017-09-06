@@ -34,3 +34,11 @@ export const getComponentName = Component => {
 export const override = (Class, methodName, callback) => {
   Class.prototype[methodName] = callback(Class.prototype[methodName]);
 };
+
+// detect if the component is rendering from the client or the server
+// copy from fbjs/lib/ExecutionEnvironment https://github.com/facebook/fbjs/blob/master/packages/fbjs/src/core/ExecutionEnvironment.js#L14-L18
+export const canUseDOM = !!(
+  typeof window !== 'undefined' &&
+  window.document &&
+  window.document.createElement
+);

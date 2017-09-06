@@ -1,4 +1,5 @@
 import test from 'ava';
+import '../helpers/setup-test-env';
 import { override } from '../../src/utils';
 
 test('override', t => {
