@@ -19,6 +19,11 @@ const connectComponent = Component => {
   }
   Component[SYMBOL_NOFLUX] = {};
 
+  // skip event listening for server-side rendering
+  if (!canUseDOM) {
+    return Component;
+  }
+
   override(Component, 'componentWillMount', originComponentWillMount => function componentWillMount() {
     // call origin componentWillMount
     if (originComponentWillMount) {
@@ -32,31 +37,28 @@ const connectComponent = Component => {
     };
     const __noflux = this[SYMBOL_NOFLUX];
 
-    // skip event listening for server-side rendering
-    if (canUseDOM) {
-      const cursorChange = () => {
-        // skip change emitted after unmounting component
-        // TODO: test this guard
-        if (!__noflux.mounted) return;
+    const cursorChange = () => {
+      // skip change emitted after unmounting component
+      // TODO: test this guard
+      if (!__noflux.mounted) return;
 
-        const startTime = timer.now();
-        this.forceUpdate(() => {
-          const endTime = timer.now();
-          const cost = endTime - startTime;
-          if (__DEV__) {
-            // eslint-disable-next-line no-console
-            console.log(`[noflux] ${getComponentName(Component)} rendering time ${cost.toFixed(3)} ms`);
-          }
-        });
-      };
-      __noflux.onGetDisposer = state.on('get', ({ path }) => {
-        if (__noflux.isRendering && !__noflux.getPaths[path]) {
-          __noflux.getPaths[path] = true;
-          // register cursor change handler
-          __noflux.onChangeDisposers.push(state.cursor(path).on('change', cursorChange));
+      const startTime = timer.now();
+      this.forceUpdate(() => {
+        const endTime = timer.now();
+        const cost = endTime - startTime;
+        if (__DEV__) {
+          // eslint-disable-next-line no-console
+          console.log(`[noflux] ${getComponentName(Component)} rendering time ${cost.toFixed(3)} ms`);
         }
       });
-    }
+    };
+    __noflux.onGetDisposer = state.on('get', ({ path }) => {
+      if (__noflux.isRendering && !__noflux.getPaths[path]) {
+        __noflux.getPaths[path] = true;
+        // register cursor change handler
+        __noflux.onChangeDisposers.push(state.cursor(path).on('change', cursorChange));
+      }
+    });
   });
 
   override(Component, 'render', originRender => function render() {
