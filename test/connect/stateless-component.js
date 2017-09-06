@@ -1,4 +1,5 @@
 import test from 'ava';
+import '../helpers/setup-test-env';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from '../../src';

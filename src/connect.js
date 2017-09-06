@@ -8,6 +8,7 @@ import {
   isReactComponentInstance,
   override,
   getComponentName,
+  canUseDOM,
 } from './utils';
 
 const SYMBOL_NOFLUX = '__noflux';
@@ -17,6 +18,11 @@ const connectComponent = Component => {
     throw new SyntaxError(`You should not use @connect for component ${getComponentName(Component)} more than once.`);
   }
   Component[SYMBOL_NOFLUX] = {};
+
+  // skip event listening for server-side rendering
+  if (!canUseDOM) {
+    return Component;
+  }
 
   override(Component, 'componentWillMount', originComponentWillMount => function componentWillMount() {
     // call origin componentWillMount
@@ -30,6 +36,7 @@ const connectComponent = Component => {
       onChangeDisposers: [],
     };
     const __noflux = this[SYMBOL_NOFLUX];
+
     const cursorChange = () => {
       // skip change emitted after unmounting component
       // TODO: test this guard

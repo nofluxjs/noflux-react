@@ -1,4 +1,5 @@
 import test from 'ava';
+import '../helpers/setup-test-env';
 import React, { Component } from 'react';
 import { isReactComponent, isReactPureComponent, getComponentName } from '../../src/utils';
 

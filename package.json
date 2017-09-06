@@ -23,8 +23,7 @@
   "ava": {
     "babel": "inherit",
     "require": [
-      "babel-register",
-      "./test/helpers/setup-test-env.js"
+      "babel-register"
     ]
   },
   "repository": {
