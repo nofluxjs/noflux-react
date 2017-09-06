@@ -63,6 +63,17 @@ const connectComponent = Component => {
     __noflux.isRendering = true;
     const vdom = originRender.call(this);
     __noflux.isRendering = false;
+
+    // check if working at server side
+    if (typeof window === 'undefined') {
+      // dispose cursor change listeners
+      __noflux.onChangeDisposers.forEach(disposer => disposer());
+      // dispose get listener
+      __noflux.onGetDisposer();
+      // reset component mounted flag
+      __noflux.mounted = false;
+    }
+
     return vdom;
   });
 
@@ -80,10 +91,8 @@ const connectComponent = Component => {
     const __noflux = this[SYMBOL_NOFLUX];
     // dispose cursor change listeners
     __noflux.onChangeDisposers.forEach(disposer => disposer());
-
     // dispose get listener
     __noflux.onGetDisposer();
-
     // reset component mounted flag
     __noflux.mounted = false;
 
