@@ -5,7 +5,7 @@ export const timer = (
   typeof performance !== 'undefined'
   && performance
   && performance.now
-  ? performance : Date
+    ? performance : Date
 );
 
 export const isReactComponent = Component =>

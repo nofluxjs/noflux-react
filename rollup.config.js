@@ -17,9 +17,7 @@ const banner =`/*
  */`;
 
 const config = {
-  entry: 'src/index.js',
-  format: target,
-  moduleName: 'NofluxReact',
+  input: 'src/index.js',
   banner,
   external: Object.keys(Object.assign({}, dependencies, devDependencies, peerDependencies)),
   plugins: [
@@ -36,7 +34,11 @@ const config = {
     }),
     filesize(),
   ],
-  dest: `dist/noflux-react.${target}.${isProd ? 'min.js' : 'js'}`,
+  output: {
+    name: 'NofluxReact',
+    file: `dist/noflux-react.${target}.${isProd ? 'min.js' : 'js'}`,
+    format: target,
+  },
 };
 
 if (target === 'umd') {
