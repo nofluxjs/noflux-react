@@ -34,6 +34,8 @@ const connectComponent = Component => {
     this[SYMBOL_NOFLUX] = {
       getPaths: {},
       onChangeDisposers: [],
+      mounted: false,
+      isForcingUpdate: false,
     };
     const __noflux = this[SYMBOL_NOFLUX];
 
@@ -42,8 +44,14 @@ const connectComponent = Component => {
       // TODO: test this guard
       if (!__noflux.mounted) return;
 
+      // skip duplicate forceUpdate calling
+      if (__noflux.isForcingUpdate) return;
+      __noflux.isForcingUpdate = true;
+
       const startTime = timer.now();
       this.forceUpdate(() => {
+        __noflux.isForcingUpdate = false;
+
         const endTime = timer.now();
         const cost = endTime - startTime;
         if (__DEV__) {
@@ -65,7 +73,6 @@ const connectComponent = Component => {
     if (!originRender) {
       throw new Error(`No render method found on the returned component instance of ${getComponentName(Component)}, you may have forgotten to define render.`);
     }
-
     const __noflux = this[SYMBOL_NOFLUX];
     __noflux.isRendering = true;
     const vdom = originRender.call(this);
