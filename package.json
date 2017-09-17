@@ -5,6 +5,7 @@
   "main": "dist/noflux-react.cjs.js",
   "module": "dist/noflux-react.es.js",
   "unpkg": "dist/noflux-react.umd.js",
+  "types": "index.d.ts",
   "scripts": {
     "prepublish": "npm run build",
     "lint": "eslint src/ test/",
