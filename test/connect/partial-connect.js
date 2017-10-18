@@ -1,8 +1,11 @@
 import test from 'ava';
 import '../helpers/setup-test-env';
 import React, { Component } from 'react';
-import { mount } from 'enzyme';
+import { configure, mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import { connect, state } from '../../src';
+
+configure({ adapter: new Adapter() });
 
 test('partial connect', t => {
   state.set({

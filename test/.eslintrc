@@ -1,5 +1,6 @@
 {
   "rules": {
-    "import/first": ["off"]
+    "import/first": ["off"],
+    "import/no-dynamic-require": ["off"]
   }
 }
