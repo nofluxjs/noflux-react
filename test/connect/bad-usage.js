@@ -2,8 +2,11 @@ import test from 'ava';
 import '../helpers/setup-test-env';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { mount } from 'enzyme';
+import { configure, mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import { connect } from '../../src';
+
+configure({ adapter: new Adapter() });
 
 test('can not use @connect for pure component', t => {
   t.throws(() => {
