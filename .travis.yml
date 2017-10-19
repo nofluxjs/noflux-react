@@ -5,6 +5,8 @@ node_js:
   - "8"
 env:
   - CXX=g++-4.8
+before_install:
+  npm install -g npm@latest
 addons:
   apt:
     sources:
