@@ -3,8 +3,6 @@ import '../helpers/setup-test-env';
 import React, { Component } from 'react';
 import {
   isReactComponent,
-  isReactPureComponent,
-  isReactStatelessComponent,
   isReactComponentInstance,
 } from '../../src/utils';
 
@@ -20,7 +18,5 @@ test('check component instance', t => {
   }
   const instance = new App();
   t.falsy(isReactComponent(instance));
-  t.falsy(isReactPureComponent(instance));
-  t.falsy(isReactStatelessComponent(instance));
   t.truthy(isReactComponentInstance(instance));
 });

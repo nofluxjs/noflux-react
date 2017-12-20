@@ -1,7 +1,7 @@
 import test from 'ava';
 import '../helpers/setup-test-env';
 import React, { PureComponent } from 'react';
-import { isReactComponent, isReactPureComponent, getComponentName } from '../../src/utils';
+import { isReactComponent, getComponentName } from '../../src/utils';
 
 test('check pure component', t => {
   class App extends PureComponent {
@@ -14,6 +14,5 @@ test('check pure component', t => {
     }
   }
   t.truthy(isReactComponent(App));
-  t.truthy(isReactPureComponent(App));
   t.is(getComponentName(App), 'App');
 });
