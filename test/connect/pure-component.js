@@ -4,8 +4,8 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from '../../src';
 
-test('can not use @connect for pure component', t => {
-  t.throws(() => {
+test('can use @connect for pure component', t => {
+  t.notThrows(() => {
     @connect
     class App extends PureComponent {
       render() {

@@ -9,16 +9,14 @@ export const timer = (
 );
 
 export const isReactComponent = Component =>
-  Component && Component.prototype && Component.prototype.isReactComponent;
-
-export const isReactPureComponent = Component =>
-  Component && Component.prototype && Component.prototype.isPureReactComponent;
-
-export const isReactStatelessComponent = Component =>
-  typeof Component === 'function' && !isReactComponent(Component);
+  Boolean(Component
+    && Component.prototype
+    && typeof Component.prototype.render === 'function');
 
 export const isReactComponentInstance = instance =>
-  instance && Object.getPrototypeOf(instance) && Object.getPrototypeOf(instance).isReactComponent;
+  Boolean(instance
+    && Object.getPrototypeOf(instance)
+    && typeof Object.getPrototypeOf(instance).render === 'function');
 
 export const getComponentName = Component => {
   const constructor = Component.prototype && Component.prototype.constructor;

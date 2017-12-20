@@ -3,8 +3,6 @@ import {
   __DEV__,
   timer,
   isReactComponent,
-  isReactPureComponent,
-  isReactStatelessComponent,
   isReactComponentInstance,
   override,
   getComponentName,
@@ -116,12 +114,6 @@ const connect = (target, prop, descriptor) => {
   }
   if (isReactComponentInstance(target) && prop && descriptor) {
     throw new SyntaxError('@connect should not be used for component method.');
-  }
-  if (isReactStatelessComponent(target)) {
-    throw new TypeError('@connect should not be used for stateless component.');
-  }
-  if (isReactPureComponent(target)) {
-    throw new TypeError('@connect should not be used for pure component.');
   }
   if (!isReactComponent(target)) {
     throw new TypeError('@connect should be used for React component');
