@@ -1,5 +1,9 @@
 # Change Log
 
+## [v0.8.1](https://github.com/nofluxjs/noflux-react/tree/v0.8.1) (2018-04-12)
+
+- Support React new lifecycle methods [\#24](https://github.com/nofluxjs/noflux-react/pull/24) ([malash](https://github.com/malash))
+
 ## [v0.8.0](https://github.com/nofluxjs/noflux-react/tree/v0.8.0) (2017-12-27)
 
 - Upgrade @noflux/state@0.7.0
