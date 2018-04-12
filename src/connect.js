@@ -1,3 +1,4 @@
+import { Component } from 'react';
 import state from './state';
 import {
   __DEV__,
@@ -10,18 +11,18 @@ import {
 
 const SYMBOL_NOFLUX = '__noflux';
 
-const connectComponent = Component => {
-  if (Component[SYMBOL_NOFLUX]) {
-    throw new SyntaxError(`You should not use @connect for component ${getComponentName(Component)} more than once.`);
+const connectComponent = Target => {
+  if (Target[SYMBOL_NOFLUX]) {
+    throw new SyntaxError(`You should not use @connect for component ${getComponentName(Target)} more than once.`);
   }
-  Component[SYMBOL_NOFLUX] = {};
+  Target[SYMBOL_NOFLUX] = {};
 
   // skip event listening for server-side rendering
   if (!canUseDOM) {
-    return Component;
+    return Target;
   }
 
-  class ConnectedComponent extends Component {
+  class ConnectedComponent extends Target {
     componentDidMount() {
       // set component mounted flag
       this.__noflux.mounted = true;
@@ -51,7 +52,7 @@ const connectComponent = Component => {
 
     render() {
       if (!super.render) {
-        throw new Error(`No render method found on the returned component instance of ${getComponentName(Component)}, you may have forgotten to define render.`);
+        throw new Error(`No render method found on the returned component instance of ${getComponentName(Target)}, you may have forgotten to define render.`);
       }
 
       let __noflux = this[SYMBOL_NOFLUX];
@@ -82,7 +83,7 @@ const connectComponent = Component => {
             const cost = endTime - startTime;
             if (__DEV__) {
               // eslint-disable-next-line no-console
-              console.log(`[noflux] ${getComponentName(Component)} rendering time ${cost.toFixed(3)} ms`);
+              console.log(`[noflux] ${getComponentName(Target)} rendering time ${cost.toFixed(3)} ms`);
             }
           });
         };
@@ -112,7 +113,19 @@ const connect = (target, prop, descriptor) => {
     throw new SyntaxError('@connect should not be used for component method.');
   }
   if (!isReactComponent(target)) {
-    throw new TypeError('@connect should be used for React component');
+    if (typeof target !== 'function') {
+      throw new TypeError('@connect should be used for React component');
+    }
+    class ConnectedComponent extends Component {
+      static displayName = getComponentName(target);
+      static contextTypes = target.contextTypes;
+      static propTypes = target.propTypes;
+      static defaultProps = target.defaultProps;
+      render() {
+        return target.call(this, this.props, this.context);
+      }
+    }
+    return connectComponent(ConnectedComponent);
   }
   return connectComponent(target);
 };
