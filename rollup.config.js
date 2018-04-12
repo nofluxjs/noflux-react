@@ -18,10 +18,8 @@ const banner =`/*
 
 const config = {
   input: 'src/index.js',
-  banner,
   external: Object.keys(Object.assign({}, dependencies, devDependencies, peerDependencies)),
   plugins: [
-    commonjs(),
     babel({
       babelrc: false,
       exclude: 'node_modules/**',
@@ -32,9 +30,11 @@ const config = {
       ],
       plugins: ['external-helpers'],
     }),
+    commonjs(),
     filesize(),
   ],
   output: {
+    banner,
     name: 'NofluxReact',
     file: `dist/noflux-react.${target}.${isProd ? 'min.js' : 'js'}`,
     format: target,
