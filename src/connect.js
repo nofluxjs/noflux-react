@@ -76,7 +76,7 @@ const connectComponent = Component => {
 
   override(Component, 'componentDidMount', originComponentDidMount => function componentDidMount() {
     // set component mounted flag
-    this.__noflux.mounted = true;
+    this[SYMBOL_NOFLUX].mounted = true;
 
     // call origin componentDidMount
     if (originComponentDidMount) {
