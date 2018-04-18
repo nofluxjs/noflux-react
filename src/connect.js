@@ -25,7 +25,7 @@ const connectComponent = Target => {
   class ConnectedComponent extends Target {
     componentDidMount() {
       // set component mounted flag
-      this.__noflux.mounted = true;
+      this[SYMBOL_NOFLUX].mounted = true;
 
       // call origin componentDidMount
       if (super.componentDidMount) {
