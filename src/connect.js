@@ -23,6 +23,8 @@ const connectComponent = Target => {
   }
 
   class ConnectedComponent extends Target {
+    static displayName = `Connect(${getComponentName(Target)})`;
+
     componentDidMount() {
       // set component mounted flag
       this[SYMBOL_NOFLUX].mounted = true;
@@ -117,7 +119,7 @@ const connect = (target, prop, descriptor) => {
       throw new TypeError('@connect should be used for React component');
     }
     class ConnectedComponent extends Component {
-      static displayName = getComponentName(target);
+      static displayName = `Connect(${getComponentName(target)})`;
       static contextTypes = target.contextTypes;
       static propTypes = target.propTypes;
       static defaultProps = target.defaultProps;

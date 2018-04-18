@@ -25,7 +25,7 @@ export const getComponentName = Component => {
     || (constructor && constructor.displayName)
     || Component.name
     || (constructor && constructor.name)
-    || 'NONAME'
+    || 'Component'
   );
 };
 
