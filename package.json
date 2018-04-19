@@ -61,8 +61,7 @@
   },
   "homepage": "https://github.com/nofluxjs/react#readme",
   "dependencies": {
-    "@noflux/state": "^0.7.0",
-    "pure-render-decorator": "^1.2.1"
+    "@noflux/state": "^0.7.0"
   },
   "devDependencies": {
     "ava": "^0.25.0",
