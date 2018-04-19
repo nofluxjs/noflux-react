@@ -25,12 +25,8 @@ export const getComponentName = Component => {
     || (constructor && constructor.displayName)
     || Component.name
     || (constructor && constructor.name)
-    || 'NONAME'
+    || 'Component'
   );
-};
-
-export const override = (Class, methodName, callback) => {
-  Class.prototype[methodName] = callback(Class.prototype[methodName]);
 };
 
 // detect if the component is rendering from the client or the server

@@ -1,6 +1,6 @@
 # @noflux/react
 
-Official React (and Preact) bindings for [Noflux](https://github.com/nofluxjs/noflux).
+Official React bindings for [Noflux](https://github.com/nofluxjs/noflux).
 
 | Package | Version | Dependencies | DevDependencies | Build |
 |--------|-------|------------|----------|----------|
