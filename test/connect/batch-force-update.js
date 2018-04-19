@@ -8,7 +8,7 @@ import { connect, state } from '../../src';
 configure({ adapter: new Adapter() });
 
 test('should batch forceUpdate', t => {
-  state.load({ name: 'Ssnau' });
+  state.set({ name: 'Ssnau' });
 
   let forceUpdateCallTimes = 0;
   let renderCallTimes = 0;

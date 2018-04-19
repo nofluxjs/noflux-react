@@ -8,7 +8,7 @@ import { connect, state } from '../../src';
 configure({ adapter: new Adapter() });
 
 test('set on componentDidMount should re-render', t => {
-  state.load({ name: 'Ssnau' });
+  state.set({ name: 'Ssnau' });
 
   let renderCallTimes = 0;
   @connect
