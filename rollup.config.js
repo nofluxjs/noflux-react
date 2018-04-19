@@ -42,7 +42,7 @@ const config = {
 };
 
 if (target === 'umd') {
-  config.external = [];
+  config.external = Object.keys(Object.assign({}, peerDependencies));
   config.plugins = [].concat(
     [resolve()],
     config.plugins,

@@ -1,23 +1,36 @@
 import test from 'ava';
 import '../helpers/setup-test-env';
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from '../../src';
+import { configure, mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import { connect, state } from '../../src';
 
-test('can use @connect for pure component', t => {
-  t.notThrows(() => {
-    @connect
-    class App extends PureComponent {
-      render() {
-        return (
-          <h1>
-            {this.props.text}
-          </h1>
-        );
-      }
+configure({ adapter: new Adapter() });
+
+test('make the pure component fluxify', t => {
+  state.load({ name: 'Ssnau' });
+
+  let renderCallTimes = 0;
+  @connect
+  class App extends PureComponent {
+    render() {
+      renderCallTimes++;
+      return (
+        <h1 id={state.get('name')}>
+          {state.get('name')}
+        </h1>
+      );
     }
-    App.propTypes = {
-      text: PropTypes.string.isRequired,
-    };
-  });
+  }
+  const wrapper = mount(<App />);
+  t.is(wrapper.find('h1').props().id, 'Ssnau');
+  t.is(wrapper.find('h1').text(), 'Ssnau');
+  t.is(renderCallTimes, 1);
+
+  state.set({ name: 'Malash' });
+  wrapper.update();
+
+  t.is(wrapper.find('h1').props().id, 'Malash');
+  t.is(wrapper.find('h1').text(), 'Malash');
+  t.is(renderCallTimes, 2);
 });
