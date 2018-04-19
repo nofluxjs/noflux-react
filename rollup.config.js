@@ -38,6 +38,9 @@ const config = {
     name: 'NofluxReact',
     file: `dist/noflux-react.${target}.${isProd ? 'min.js' : 'js'}`,
     format: target,
+    globals: {
+      react: 'React',
+    },
   },
 };
 
