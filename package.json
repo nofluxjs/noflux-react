@@ -29,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nofluxjs/react.git"
+    "url": "git+https://github.com/nofluxjs/noflux-react.git"
   },
   "keywords": [
     "noflux",
@@ -57,9 +57,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nofluxjs/react/issues"
+    "url": "https://github.com/nofluxjs/noflux-react/issues"
   },
-  "homepage": "https://github.com/nofluxjs/react#readme",
+  "homepage": "https://github.com/nofluxjs/noflux-react#readme",
   "dependencies": {
     "@noflux/state": "^0.7.0"
   },
