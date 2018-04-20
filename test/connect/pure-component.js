@@ -28,9 +28,8 @@ test('make the pure component fluxify', t => {
   t.is(renderCallTimes, 1);
 
   state.set({ name: 'Malash' });
-  wrapper.update();
 
-  t.is(wrapper.find('h1').props().id, 'Malash');
+  t.is(wrapper.find('h1').instance().getAttribute('id'), 'Malash');
   t.is(wrapper.find('h1').text(), 'Malash');
   t.is(renderCallTimes, 2);
 });
