@@ -36,3 +36,7 @@ export const canUseDOM = !!(
   window.document &&
   window.document.createElement
 );
+
+const hasSymbol = typeof Symbol === 'function' && Symbol.for;
+
+export const SYMBOL_NOFLUX = hasSymbol ? Symbol.for('noflux') : '__noflux';

@@ -7,9 +7,8 @@ import {
   isReactComponentInstance,
   getComponentName,
   canUseDOM,
+  SYMBOL_NOFLUX,
 } from './utils';
-
-const SYMBOL_NOFLUX = '__noflux';
 
 const connectComponent = Target => {
   if (Target[SYMBOL_NOFLUX]) {
