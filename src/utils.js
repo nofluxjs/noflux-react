@@ -30,7 +30,8 @@ export const getComponentName = Component => {
 };
 
 // detect if the component is rendering from the client or the server
-// copy from fbjs/lib/ExecutionEnvironment https://github.com/facebook/fbjs/blob/master/packages/fbjs/src/core/ExecutionEnvironment.js#L14-L18
+// copy from fbjs/lib/ExecutionEnvironment
+// https://github.com/facebook/fbjs/blob/38bf26f4e6ea64d7ff68393919fb5e98f5ceac3b/packages/fbjs/src/core/ExecutionEnvironment.js#L12-L16
 export const canUseDOM = !!(
   typeof window !== 'undefined' &&
   window.document &&
