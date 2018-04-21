@@ -29,17 +29,17 @@ test('should batch forceUpdate', t => {
     render() {
       renderCallTimes++;
       return (
-        <botton onClick={() => this.onClick()}>
+        <button onClick={() => this.onClick()}>
           {state.get('name')}
-        </botton>
+        </button>
       );
     }
   }
 
   const wrapper = mount(<App />);
-  wrapper.find('botton').simulate('click');
+  wrapper.find('button').simulate('click');
 
   t.is(forceUpdateCallTimes, 1);
   t.is(renderCallTimes, 2);
-  t.is(wrapper.find('botton').text(), 'Malash9');
+  t.is(wrapper.find('button').text(), 'Malash9');
 });
