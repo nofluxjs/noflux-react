@@ -3,11 +3,8 @@ import test from 'ava';
 import '../helpers/setup-test-env';
 import React from 'react';
 import createReactClass from 'create-react-class';
-import { configure, mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import { mount } from 'enzyme';
 import { connect, state } from '../../src';
-
-configure({ adapter: new Adapter() });
 
 test('works with create-react-class', t => {
   state.set({ name: 'Ssnau' });
