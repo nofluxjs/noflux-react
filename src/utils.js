@@ -15,8 +15,7 @@ export const isReactComponent = Component =>
 
 export const isReactComponentInstance = instance =>
   Boolean(instance
-    && Object.getPrototypeOf(instance)
-    && typeof Object.getPrototypeOf(instance).render === 'function');
+    && typeof instance.render === 'function');
 
 export const getComponentName = Component => {
   const constructor = Component.prototype && Component.prototype.constructor;
