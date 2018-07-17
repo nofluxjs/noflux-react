@@ -65,7 +65,7 @@
   },
   "homepage": "https://github.com/nofluxjs/noflux-react#readme",
   "dependencies": {
-    "@noflux/state": "^0.7.0"
+    "@noflux/state": "^1.0.0-alpha.2"
   },
   "devDependencies": {
     "@types/create-react-class": "^15.6.1",

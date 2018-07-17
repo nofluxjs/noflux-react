@@ -30,14 +30,14 @@ const connectComponent = Target => {
       // init
       this[SYMBOL_NOFLUX] = {
         getPaths: {},
-        onChangeDisposers: [],
+        onSetDisposers: [],
         mounted: false,
         isForcingUpdate: false,
       };
       const __noflux = this[SYMBOL_NOFLUX];
 
-      const cursorChange = () => {
-        // skip change emitted after unmounting component
+      const onSet = () => {
+        // skip re-render after unmounting component
         // TODO: test this guard
         if (!__noflux.mounted) return;
 
@@ -60,8 +60,8 @@ const connectComponent = Target => {
       __noflux.onGetDisposer = state.on('get', ({ path }) => {
         if (__noflux.isRendering && !__noflux.getPaths[path]) {
           __noflux.getPaths[path] = true;
-          // register cursor change handler
-          __noflux.onChangeDisposers.push(state.cursor(path).on('change', cursorChange));
+          // register cursor on set handler
+          __noflux.onSetDisposers.push(state.cursor(path).on('set', onSet));
         }
       });
     }
@@ -78,8 +78,8 @@ const connectComponent = Target => {
 
     componentWillUnmount() {
       const __noflux = this[SYMBOL_NOFLUX];
-      // dispose cursor change listeners
-      __noflux.onChangeDisposers.forEach(disposer => disposer());
+      // dispose cursor on set listeners
+      __noflux.onSetDisposers.forEach(disposer => disposer());
 
       // dispose get listener
       __noflux.onGetDisposer();
