@@ -1,5 +1,15 @@
 # Change Log
 
+## [v1.0.0](https://github.com/nofluxjs/noflux-state/tree/v1.0.0) (2018-08-17)
+
+- v1 released [\#28](https://github.com/nofluxjs/noflux-react/pull/28) ([malash](https://github.com/malash))
+
+- Remove deprecated API [\#26](https://github.com/nofluxjs/noflux-react/pull/26) ([malash](https://github.com/malash))
+
+- Rewrite connect with ES6 class [\#25](https://github.com/nofluxjs/noflux-react/pull/25) ([malash](https://github.com/malash))
+
+- Use constructor for init in connect component [\#24](https://github.com/nofluxjs/noflux-react/pull/24) ([malash](https://github.com/malash))
+
 ## [v0.8.1](https://github.com/nofluxjs/noflux-react/tree/v0.8.1) (2018-04-12)
 
 - Support React new lifecycle methods [\#24](https://github.com/nofluxjs/noflux-react/pull/24) ([malash](https://github.com/malash))
