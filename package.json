@@ -1,6 +1,6 @@
 {
   "name": "@noflux/react",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0",
   "description": "Official React bindings for noflux",
   "main": "dist/noflux-react.cjs.js",
   "module": "dist/noflux-react.es.js",
@@ -65,7 +65,7 @@
   },
   "homepage": "https://github.com/nofluxjs/noflux-react#readme",
   "dependencies": {
-    "@noflux/state": "^1.0.0-alpha.2"
+    "@noflux/state": "^1.0.1"
   },
   "devDependencies": {
     "@types/create-react-class": "^15.6.1",
