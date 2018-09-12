@@ -2,14 +2,14 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 import replace from 'rollup-plugin-replace';
-import uglify from 'rollup-plugin-uglify';
+import { uglify } from 'rollup-plugin-uglify';
 import filesize from 'rollup-plugin-filesize';
 import { version, dependencies, devDependencies, peerDependencies } from './package.json';
 
 const target = process.env.TARGET || 'es';
 const env = process.env.NODE_ENV || 'development';
 const isProd = env === 'production';
-const banner =`/*
+const banner = `/*
  * @license
  * @noflux/react v${version}
  * (c) 2017-${new Date().getFullYear()} Malash <i@malash.me>
@@ -21,14 +21,9 @@ const config = {
   external: Object.keys(Object.assign({}, dependencies, devDependencies, peerDependencies)),
   plugins: [
     babel({
-      babelrc: false,
+      babelrc: true,
       exclude: 'node_modules/**',
-      // .babelrc
-      presets: [
-        ['es2015', { modules: false }],
-        'stage-0'
-      ],
-      plugins: ['external-helpers'],
+      externalHelpers: true,
     }),
     commonjs(),
     filesize(),
@@ -49,7 +44,7 @@ if (target === 'umd') {
   config.plugins = [].concat(
     [resolve()],
     config.plugins,
-    [replace({ 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) })]
+    [replace({ 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) })],
   );
 }
 
@@ -58,9 +53,9 @@ if (isProd) {
     config.plugins,
     [uglify({
       output: {
-        comments: (node, comment) => comment.type === "comment2" && /@preserve|@license|@cc_on/i.test(comment.value),
+        comments: (node, comment) => comment.type === 'comment2' && /@preserve|@license|@cc_on/i.test(comment.value),
       },
-    })]
+    })],
   );
 }
 

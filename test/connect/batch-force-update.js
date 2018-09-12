@@ -26,7 +26,7 @@ test('should batch forceUpdate', t => {
     render() {
       renderCallTimes++;
       return (
-        <button onClick={() => this.onClick()}>
+        <button type="button" onClick={() => this.onClick()}>
           {state.get('name')}
         </button>
       );

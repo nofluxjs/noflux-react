@@ -21,7 +21,9 @@ test('partial connect', t => {
       profileRenderCallTimes++;
       return (
         <div>
-          Profile name is {state.get('profile.name')}
+          Profile name is
+          {' '}
+          {state.get('profile.name')}
         </div>
       );
     }
@@ -34,7 +36,9 @@ test('partial connect', t => {
       projectRenderCallTimes++;
       return (
         <div>
-          Project name is {state.get('project.name')}
+          Project name is
+          {' '}
+          {state.get('project.name')}
         </div>
       );
     }
@@ -47,8 +51,12 @@ test('partial connect', t => {
       combineRenderCallTimes++;
       return (
         <div>
-          Profile name is {state.get('profile.name')}
-          Project name is {state.get('project.name')}
+          Profile name is
+          {' '}
+          {state.get('profile.name')}
+          Project name is
+          {' '}
+          {state.get('project.name')}
         </div>
       );
     }

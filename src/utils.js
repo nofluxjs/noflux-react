@@ -8,13 +8,11 @@ export const timer = (
     ? performance : Date
 );
 
-export const isReactComponent = Component =>
-  Boolean(Component
+export const isReactComponent = Component => Boolean(Component
     && Component.prototype
     && typeof Component.prototype.render === 'function');
 
-export const isReactComponentInstance = instance =>
-  Boolean(instance
+export const isReactComponentInstance = instance => Boolean(instance
     && typeof instance.render === 'function');
 
 export const getComponentName = Component => {
@@ -32,9 +30,9 @@ export const getComponentName = Component => {
 // copy from fbjs/lib/ExecutionEnvironment
 // https://github.com/facebook/fbjs/blob/38bf26f4e6ea64d7ff68393919fb5e98f5ceac3b/packages/fbjs/src/core/ExecutionEnvironment.js#L12-L16
 export const canUseDOM = !!(
-  typeof window !== 'undefined' &&
-  window.document &&
-  window.document.createElement
+  typeof window !== 'undefined'
+  && window.document
+  && window.document.createElement
 );
 
 const hasSymbol = typeof Symbol === 'function' && Symbol.for;

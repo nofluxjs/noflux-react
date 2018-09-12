@@ -10,9 +10,10 @@ test('can not use @connect for component method', t => {
     class App extends Component {
       @connect
       render() {
+        const { text } = this.props;
         return (
           <h1>
-            {this.props.text}
+            {text}
           </h1>
         );
       }

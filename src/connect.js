@@ -121,9 +121,13 @@ const connect = (target, prop, descriptor) => {
     }
     class ConnectedComponent extends Component {
       static displayName = `Connect(${getComponentName(target)})`;
+
       static contextTypes = target.contextTypes;
+
       static propTypes = target.propTypes;
+
       static defaultProps = target.defaultProps;
+
       render() {
         return target.call(this, this.props, this.context);
       }

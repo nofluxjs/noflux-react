@@ -13,6 +13,7 @@ test('set on componentDidMount should re-render', t => {
     componentDidMount() {
       state.set('name', 'Malash');
     }
+
     render() {
       renderCallTimes++;
       return (
